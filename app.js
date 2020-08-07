@@ -37,6 +37,20 @@ const wikiSchema = new mongoose.Schema({
 const Article = mongoose.model('article', wikiSchema);
 
 
+///////////////////////////////////////Home Page////////////////////////////////////////////////
+
+app.route("/").get(function (req, res) {
+	Article.find({}, function (err, foundItems) {
+		if (!err) {
+			
+			res.render('home', {
+				lor1: foundItems
+			});
+		}
+	});
+});
+
+
 
 /////////////////////////////////////////////////All Articles/////////////////////////////////////
 
@@ -85,7 +99,7 @@ app.route("/articles").get(function (req, res) {
 
 
 
-app.route("/articles/:topic").get(function (req, res) {
+app.route("/:topic").get(function (req, res) {
 	Article.findOne({
 			title: req.params.topic
 		},
@@ -143,10 +157,11 @@ app.route("/articles/:topic").get(function (req, res) {
 		}
 	)
 }).delete(function (req, res) {
-	Article.deleteOne(
-		{title: req.params.topic},
-		function(err) {
-			if(!err) {
+	Article.deleteOne({
+			title: req.params.topic
+		},
+		function (err) {
+			if (!err) {
 				res.send("Item successfully deleted.");
 			} else {
 				res.send(err);
